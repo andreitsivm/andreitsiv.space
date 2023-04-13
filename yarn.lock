@@ -1124,6 +1124,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"client@workspace:packages/front":
+  version: 0.0.0-use.local
+  resolution: "client@workspace:packages/front"
+  dependencies:
+    "@emotion/react": ^11.10.5
+    "@emotion/styled": ^11.10.5
+    "@mui/icons-material": ^5.11.0
+    "@mui/material": ^5.11.6
+    "@next/font": 13.1.6
+    "@reduxjs/toolkit": ^1.9.2
+    "@types/node": 18.11.18
+    "@types/react": 18.0.27
+    "@types/react-dom": 18.0.10
+    eslint: 8.33.0
+    eslint-config-next: 13.1.6
+    next: 13.1.6
+    react: 18.2.0
+    react-dom: 18.2.0
+    typescript: 4.9.4
+  languageName: unknown
+  linkType: soft
+
 "clsx@npm:^1.2.1":
   version: 1.2.1
   resolution: "clsx@npm:1.2.1"
@@ -2706,28 +2728,6 @@ __metadata:
   checksum: 584977e382bd826c21e7fc5f67bca50e4d95741a854b1686394d45331404479c7266569671227421975fc18e5cf70769a4ad7edede7450d4497213205bba77c8
   languageName: node
   linkType: hard
-
-"nft-market@workspace:packages/front":
-  version: 0.0.0-use.local
-  resolution: "nft-market@workspace:packages/front"
-  dependencies:
-    "@emotion/react": ^11.10.5
-    "@emotion/styled": ^11.10.5
-    "@mui/icons-material": ^5.11.0
-    "@mui/material": ^5.11.6
-    "@next/font": 13.1.6
-    "@reduxjs/toolkit": ^1.9.2
-    "@types/node": 18.11.18
-    "@types/react": 18.0.27
-    "@types/react-dom": 18.0.10
-    eslint: 8.33.0
-    eslint-config-next: 13.1.6
-    next: 13.1.6
-    react: 18.2.0
-    react-dom: 18.2.0
-    typescript: 4.9.4
-  languageName: unknown
-  linkType: soft
 
 "object-assign@npm:^4.1.1":
   version: 4.1.1
