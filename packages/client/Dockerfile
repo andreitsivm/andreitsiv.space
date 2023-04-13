@@ -5,14 +5,15 @@ FROM node:16.1.0
 WORKDIR /usr/app
 
 # Install PM2 globally
-RUN npm install --global pm2 yarn
+RUN yarn global add pm2
 
 # Copy package.json and package-lock.json before other files
 # Utilise Docker cache to save re-installing dependencies if unchanged
 COPY ./package*.json ./
+COPY ./yarn.lock ./
 
 # Install dependencies
-RUN yarn install --production
+RUN yarn install
 
 # Copy all files
 COPY ./ ./
