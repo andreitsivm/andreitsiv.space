@@ -27,7 +27,7 @@ x-common-variables: &common-variables
     restart: always
     build:
       dockerfile: Dockerfile
-      context: ./.nginx
+      context: "./.nginx"
     ports:
       - "3050:80"
 
@@ -50,10 +50,10 @@ x-common-variables: &common-variables
       - CHOKIDAR_USEPOLLING=true
     build:
       dockerfile: Dockerfile
-      context: ./packages/client
+      context: "./packages/client"
     volumes:
-      - /app/node_modules
-      - ./client:/app
+      - "/app/node_modules"
+      - "./client:/app"
 
   # adminer:
   #     image: adminer:latest
