@@ -1,21 +1,21 @@
 # stage1 as builder
-FROM node:16.1.0 as builder
+FROM node as builder
 
 # copy the package.json to install dependencies
-COPY package.json package-lock.json ./
+COPY package.json yarn-lock.json ./
 
 # Install the dependencies and make the folder
-RUN npm install && mkdir /andreitsiv.space && mv ./node_modules ./andreitsiv.space
+RUN yarn install && mkdir /app && mv ./node_modules ./app
 
-WORKDIR /andreitsiv.space
+WORKDIR /app
 
 COPY . .
 
 # Build the project and copy the files
-RUN npm run build
+RUN yarn build
 
 
-FROM nginx:alpine
+FROM nginx
 
 #!/bin/sh
 
@@ -25,7 +25,7 @@ COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy from the stahg 1
-COPY --from=builder /andreitsiv.space/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
 
 EXPOSE 3000 80
 
