@@ -1,22 +1,15 @@
+# Base on offical NGINX Alpine image
+FROM nginx:alpine
 
-FROM node as builder
-WORKDIR /
-COPY package.json ./
-COPY yarn.lock ./
-COPY ./ ./
-RUN yarn install
+# Remove any existing config files
+RUN rm /etc/nginx/conf.d/*
 
-# Build the project and copy the files
-RUN yarn workspace client build
-FROM nginx
+# Copy config files
+# *.conf files in conf.d/ dir get included in main config
+COPY ./default.conf /etc/nginx/conf.d/
 
-#!/bin/sh
-COPY ./.nginx/nginx.conf /etc/nginx/conf.d/default.conf
-RUN rm -rf /usr/share/nginx/html/*
+# Expose the listening port
+EXPOSE 80
 
-# Copy from the stahg 1
-COPY --from=builder ./build /usr/share/nginx/html
-
-EXPOSE 3000 80
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# Launch NGINX
+CMD [ "nginx", "-g", "daemon off;" ]
