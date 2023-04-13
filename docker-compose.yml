@@ -50,7 +50,7 @@ x-common-variables: &common-variables
       - CHOKIDAR_USEPOLLING=true
     build:
       dockerfile: Dockerfile
-      context: 
+      context: ./packages/client
     volumes:
       - /app/node_modules
       - ./client:/app
