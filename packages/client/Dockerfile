@@ -1,5 +1,5 @@
 # Base on offical Node.js Alpine image
-FROM node:16.1.0
+FROM node:alpine as base
 
 # Set working directory
 WORKDIR /usr/app
@@ -16,7 +16,8 @@ RUN yarn install
 
 # Copy all files
 COPY ./ ./
-
+FROM base AS builder
+COPY --from=deps /usr/app/node_modules ./node_modules
 RUN yarn build
 
 # If using npm comment out above and use below instead
@@ -24,8 +25,10 @@ RUN yarn build
 
 # Production image, copy all the files and run next
 FROM base AS runner
+FROM nginx:alpine
 
 ENV NODE_ENV production
+ENV PORT 3000
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -43,6 +46,4 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-
-CMD ["node", "server.js"]
+CMD ["pm2-runtime", "node", "server.js"]
