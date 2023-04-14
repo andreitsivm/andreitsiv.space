@@ -1124,9 +1124,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"client@workspace:packages/front":
+"client@workspace:packages/client":
   version: 0.0.0-use.local
-  resolution: "client@workspace:packages/front"
+  resolution: "client@workspace:packages/client"
   dependencies:
     "@emotion/react": ^11.10.5
     "@emotion/styled": ^11.10.5
