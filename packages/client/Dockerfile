@@ -5,10 +5,8 @@ FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 # Set working directory
-WORKDIR /usr/app
 
-# Install PM2 globally
-RUN yarn global add pm2
+WORKDIR /usr/app
 
 # Copy package.json and package-lock.json before other files
 # Utilise Docker cache to save re-installing dependencies if unchanged
@@ -24,8 +22,11 @@ COPY ./ ./
 # RUN npm run build
 
 # Production image, copy all the files and run next
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN yarn build
 FROM base AS runner
-
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
