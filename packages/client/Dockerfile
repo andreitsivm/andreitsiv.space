@@ -1,51 +1,31 @@
-# Install dependencies only when needed
-FROM node:alpine AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk update && apk add --no-cache libc6-compat && apk add git
+# Base on offical Node.js Alpine image
+FROM node:alpine
+
+# Set working directory
 WORKDIR /usr/app
-COPY package.json yarn.lock ./
-RUN yarn install --immutable
 
+# Install PM2 globally
+RUN yarn global pm2
 
-# Rebuild the source code only when needed
-FROM node:alpine AS builder
-# add environment variables to client code
-ARG NEXT_PUBLIC_BACKEND_URL
-ARG NEXT_PUBLIC_META_API_KEY
+# Copy package.json and package-lock.json before other files
+# Utilise Docker cache to save re-installing dependencies if unchanged
+COPY ./package.json ./
 
+# Install dependencies
+RUN yarn install --production
 
-ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
-ENV NEXT_PUBLIC_META_API_KEY=$NEXT_PUBLIC_META_API_KEY
+# Copy all files
+COPY ./ ./
 
-WORKDIR /usr/app
-COPY . .
-COPY --from=deps /usr/app/node_modules ./node_modules
-ARG NODE_ENV=production
-RUN echo ${NODE_ENV}
-RUN NODE_ENV=${NODE_ENV} yarn build
+# Build app
+RUN yarn build
 
-# Production image, copy all the files and run next
-FROM node:alpine AS runner
-WORKDIR /usr/app
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-
-# You only need to copy next.config.js if you are NOT using the default configuration. 
-# Copy all necessary files used by nex.config as well otherwise the build will fail.
-COPY --from=builder /usr/app/next.config.js ./next.config.js
-COPY --from=builder /usr/app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /usr/app/.next ./.next
-COPY --from=builder /usr/app/node_modules ./node_modules
-COPY --from=builder /usr/app/package.json ./package.json
-COPY --from=builder /usr/app/pages ./pages
-
-USER nextjs
-
-# Expose
+# Expose the listening port
 EXPOSE 3000
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry.
-ENV NEXT_TELEMETRY_DISABLED 1
-CMD ["yarn", "start"]
+# Run container as non-root (unprivileged) user
+# The node user is provided in the Node.js Alpine base image
+USER node
+
+# Run npm start script with PM2 when container starts
+CMD [ "pm2-runtime", "yarn", "--", "start" ]
