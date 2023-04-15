@@ -5,8 +5,6 @@ services:
       context: ./packages/client
     volumes:
       - staticbuild:/app/out
-    networks:
-      - dev
  
   nginx:
     build:
@@ -15,14 +13,4 @@ services:
       - staticbuild:/app/public
     ports:
       - 3000:3000
-    networks:
-      - dev
- 
-  networks:
-    dev:
-      driver: bridge
- 
-  volumes:
-    staticbuild:
-
       
