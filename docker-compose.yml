@@ -3,8 +3,4 @@ services:
   nextjs:
     build: ./packages/client
     ports:
-      - 3000:3000
-  nginx:
-    build: ./.nginx
-    ports:
-      - 80:80
+      - 80:3000
