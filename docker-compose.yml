@@ -1,8 +1,28 @@
-version: '3'
 services:
-  nextjs:
-    build: ./packages/client
+  
+  client:
+    build:
+      context: ./packages/client
+    volumes:
+      - staticbuild:/app/out
+    networks:
+      - dev
+ 
   nginx:
-    build: ./.nginx
+    build:
+      context: ./.nginx
+    volumes:
+      - staticbuild:/app/public
     ports:
-      - 80:80
+      - 3000:3000
+    networks:
+      - dev
+ 
+  networks:
+    dev:
+      driver: bridge
+ 
+  volumes:
+    staticbuild:
+
+      
