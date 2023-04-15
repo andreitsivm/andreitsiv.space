@@ -2,6 +2,8 @@ version: '3'
 services:
   nextjs:
     build: ./packages/client
+    ports:
+      - 3000:3000
   nginx:
     build: ./.nginx
     ports:
